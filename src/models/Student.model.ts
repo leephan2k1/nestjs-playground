@@ -12,7 +12,7 @@ import { Score } from './Score.model';
 export type StudentDocument = HydratedDocument<Student>;
 
 @Schema({ timestamps: true })
-export class Student extends User {
+export class Student {
   @Prop({
     required: true,
     trim: true,
@@ -21,6 +21,9 @@ export class Student extends User {
     index: true,
   })
   student_id: string;
+
+  @Prop({ type: mongoose.Types.ObjectId, required: true, ref: 'User' })
+  info: User;
 
   @Prop({ type: mongoose.Types.ObjectId, required: true, ref: 'Faculty' })
   faculty: Faculty;

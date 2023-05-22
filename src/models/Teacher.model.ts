@@ -9,7 +9,7 @@ import { Class } from './Class.model';
 export type TeacherDocument = HydratedDocument<Teacher>;
 
 @Schema({ timestamps: true })
-export class Teacher extends User {
+export class Teacher {
   @Prop({
     required: true,
     trim: true,
@@ -21,6 +21,9 @@ export class Teacher extends User {
 
   @Prop({ required: true, trim: true, maxlength: 250 })
   degree: string;
+
+  @Prop({ type: mongoose.Types.ObjectId, required: true, ref: 'User' })
+  info: User;
 
   @Prop({ required: true, type: mongoose.Types.ObjectId, ref: 'Major' })
   major: Major;
