@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
 import * as mongoose from 'mongoose';
+import { HydratedDocument } from 'mongoose';
+import { encodePassword } from 'src/utils/bcrypt';
 import { Address } from './Address.model';
 
 export type UserDocument = HydratedDocument<User>;
@@ -36,16 +37,16 @@ export class User {
   })
   password: string;
 
-  @Prop({ required: true, trim: true, maxlength: 500 })
+  @Prop({ trim: true, maxlength: 500 })
   fullName: string;
 
   @Prop({ type: Date, trim: true, maxlength: 250 })
   dateOfBirth: Date;
 
-  @Prop({ required: true, type: String, enum: Sex })
+  @Prop({ type: String, enum: Sex })
   sex: string;
 
-  @Prop({ required: true, type: String, enum: Role })
+  @Prop({ type: String, enum: Role })
   role: string;
 
   @Prop({ type: mongoose.Types.ObjectId })
@@ -55,4 +56,23 @@ export class User {
   address: Address;
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+const UserSchema = SchemaFactory.createForClass(User);
+
+// hashing password middleware:
+UserSchema.pre('save', async function (next) {
+  try {
+    // only hash the password if it has been modified (or is new)
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const user = this;
+    if (!user.isModified('password')) return next();
+
+    const hashedPassword = await encodePassword(this.password);
+    this.password = hashedPassword;
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
+export { UserSchema };
