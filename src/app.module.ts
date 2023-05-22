@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';
-import { AnimeModule } from './modules/anime.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UploadModule } from './modules/upload.module';
-import { StreamingModule } from './modules/streaming.module';
+import { AuthModule } from './modules/auth.module';
+import { UserModule } from './modules/user.module';
 
 @Module({
   imports: [
@@ -15,10 +14,8 @@ import { StreamingModule } from './modules/streaming.module';
         uri: config.get<string>('MONGODB_URI'),
       }),
     }),
-    AnimeModule,
-    UploadModule,
-    StreamingModule,
+    AuthModule,
+    UserModule,
   ],
-  providers: [],
 })
 export class AppModule {}
