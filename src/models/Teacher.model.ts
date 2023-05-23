@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 import * as mongoose from 'mongoose';
-import { Major } from './Major.address';
+import { Major } from './Major.model';
 import { Faculty } from './Faculty.model';
 import { User } from './User.model';
 import { Class } from './Class.model';
@@ -22,13 +22,13 @@ export class Teacher {
   @Prop({ required: true, trim: true, maxlength: 250 })
   degree: string;
 
-  @Prop({ type: mongoose.Types.ObjectId, required: true, ref: 'User' })
+  @Prop({ type: mongoose.Types.ObjectId, ref: 'User' })
   info: User;
 
-  @Prop({ required: true, type: mongoose.Types.ObjectId, ref: 'Major' })
+  @Prop({ type: mongoose.Types.ObjectId, ref: 'Major' })
   major: Major;
 
-  @Prop({ type: mongoose.Types.ObjectId, ref: 'Faculty', required: true })
+  @Prop({ type: mongoose.Types.ObjectId, ref: 'Faculty' })
   faculty: Faculty;
 
   @Prop([{ type: mongoose.Types.ObjectId, ref: 'Class' }])

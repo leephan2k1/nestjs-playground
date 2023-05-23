@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 import * as mongoose from 'mongoose';
-import { Major } from './Major.address';
+import { Major } from './Major.model';
 import { Faculty } from './Faculty.model';
 import { User } from './User.model';
 import { Class } from './Class.model';
@@ -22,7 +22,7 @@ export class Student {
   })
   student_id: string;
 
-  @Prop({ type: mongoose.Types.ObjectId, required: true, ref: 'User' })
+  @Prop({ type: mongoose.Types.ObjectId, ref: 'User' })
   info: User;
 
   @Prop({ type: mongoose.Types.ObjectId, required: true, ref: 'Faculty' })

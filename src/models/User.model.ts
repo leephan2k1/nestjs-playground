@@ -11,7 +11,7 @@ enum Sex {
   FEMALE = 1,
 }
 
-enum Role {
+export enum Role {
   TEACHER = 'teacher',
   STUDENT = 'student',
   ADMIN = 'admin',
