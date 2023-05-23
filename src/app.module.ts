@@ -4,6 +4,9 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './modules/auth.module';
 import { UserModule } from './modules/user.module';
 import { PassportModule } from '@nestjs/passport';
+import { ClassModule } from './modules/class.module';
+import { FacultyModule } from './modules/faculty.module';
+import { MajorModule } from './modules/major.module';
 
 @Module({
   imports: [
@@ -20,6 +23,9 @@ import { PassportModule } from '@nestjs/passport';
     }),
     AuthModule,
     UserModule,
+    ClassModule,
+    FacultyModule,
+    MajorModule,
   ],
 })
 export class AppModule {}
