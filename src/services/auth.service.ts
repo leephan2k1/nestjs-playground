@@ -6,9 +6,9 @@ import { UserService } from './user.service';
 export class AuthService {
   constructor(private readonly userService: UserService) {}
 
-  async validateUser(user: UserDto) {
-    const valid = await this.userService.comparePassword(user);
+  async validateUser(reqUser: UserDto) {
+    const { status, user } = await this.userService.comparePassword(reqUser);
 
-    return valid;
+    return { status, user };
   }
 }

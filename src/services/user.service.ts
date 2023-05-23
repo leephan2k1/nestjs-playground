@@ -33,7 +33,7 @@ export class UserService {
   }
 
   findOne(email: FindUserByEmailDto) {
-    return this.userRepo.findUserByEmail(email);
+    return this.userRepo.findUserByEmailIgnorePassword(email);
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
@@ -51,9 +51,20 @@ export class UserService {
       throw new NotFoundException('User not found');
     }
 
-    return await decodePassword({
+    const status = await decodePassword({
       reqPassword: user.password,
       currentPassword: userInfo.password,
     });
+
+    let userWithoutPassword;
+    if (userInfo) {
+      const { password, ...restOfUser } = JSON.parse(JSON.stringify(userInfo));
+      userWithoutPassword = restOfUser;
+    }
+
+    return {
+      status,
+      user: userWithoutPassword,
+    };
   }
 }
