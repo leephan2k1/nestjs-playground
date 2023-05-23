@@ -3,6 +3,13 @@ import { AppModule } from './app.module';
 import { VersioningType } from '@nestjs/common';
 import * as session from 'express-session';
 import * as passport from 'passport';
+import * as connectMongoDBSession from 'connect-mongodb-session';
+const MongoDBStore = connectMongoDBSession(session);
+
+const sessionsStore = new MongoDBStore({
+  uri: process.env.MONGODB_URI,
+  collection: 'sessions',
+});
 
 async function bootstrap() {
   const PORT = process.env.PORT ? parseInt(process.env.PORT) : 5001;
@@ -20,6 +27,7 @@ async function bootstrap() {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
       },
+      store: sessionsStore,
     }),
   );
 
