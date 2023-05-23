@@ -24,4 +24,8 @@ export class UserRepository {
   async findUserByEmail(emailDto: FindUserByEmailDto) {
     return this.userModel.findOne({ email: emailDto.email });
   }
+
+  async findUserByEmailIgnorePassword(emailDto: FindUserByEmailDto) {
+    return this.userModel.findOne({ email: emailDto.email }, { password: 0 });
+  }
 }
