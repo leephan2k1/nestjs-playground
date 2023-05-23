@@ -1,29 +1,29 @@
 import {
+  BadRequestException,
   Body,
   Controller,
+  Get,
+  HttpStatus,
   Post,
+  Req,
+  Res,
   UseGuards,
   UsePipes,
   ValidationPipe,
-  Res,
-  HttpStatus,
-  BadRequestException,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { Request, Response } from 'express';
 import { UserDto } from 'src/dtos/user/create-user.dto';
 import { UserService } from 'src/services/user.service';
-import { Response } from 'express';
+import { LocalAuthGuard } from 'src/utils/localAuth.guard';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly userService: UserService) {}
 
   @Post('login')
-  @UseGuards(AuthGuard('local'))
   @UsePipes(ValidationPipe)
+  @UseGuards(LocalAuthGuard)
   async login(@Body() user: UserDto, @Res() res: Response) {
-    console.log('login:; ', user);
-
     return res.status(HttpStatus.OK).send('logged');
   }
 
@@ -34,8 +34,11 @@ export class AuthController {
 
     if (!newUser) throw new BadRequestException('email was used by other user');
 
-    //generate JWT token here
-
     return res.status(HttpStatus.CREATED).send(newUser);
+  }
+
+  @Get('status')
+  async getAuthStatus(@Req() req: Request, @Res() res: Response) {
+    return res.status(HttpStatus.OK).send(req.user);
   }
 }
