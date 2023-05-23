@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './modules/auth.module';
 import { UserModule } from './modules/user.module';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
@@ -13,6 +14,9 @@ import { UserModule } from './modules/user.module';
       useFactory: async (config: ConfigService) => ({
         uri: config.get<string>('MONGODB_URI'),
       }),
+    }),
+    PassportModule.register({
+      session: true,
     }),
     AuthModule,
     UserModule,
