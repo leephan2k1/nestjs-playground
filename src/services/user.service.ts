@@ -1,20 +1,21 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { FindUserByEmailDto } from 'src/dtos/user/find-user.dto';
 import { UserRepository } from 'src/repositories/user.repository';
-import { UserDto } from '../dtos/user/create-user.dto';
-import { UpdateUserDto } from '../dtos/user/update-user.dto';
-import { NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { User } from 'src/models/User.model';
 import { decodePassword } from 'src/utils/bcrypt';
+import { StudentDto, TeacherDto, UserDto } from '../dtos/user/create-user.dto';
+import {
+  UpdateTeacherDto,
+  UpdateUserDto,
+  UpdateStudentDto,
+} from '../dtos/user/update-user.dto';
 
 @Injectable()
 export class UserService {
-  constructor(
-    private readonly userRepo: UserRepository,
-    @InjectModel(User.name) private readonly userModel: Model<User>,
-  ) {}
+  constructor(private readonly userRepo: UserRepository) {}
 
   async create(createUserDto: UserDto) {
     const newUser = await this.userRepo.createNewUser(createUserDto);
@@ -26,6 +27,40 @@ export class UserService {
     );
 
     return userWithoutPassword;
+  }
+
+  async createStudent(st: StudentDto) {
+    const newStudent = await this.userRepo.createNewStudent(st);
+
+    if (!newStudent) {
+      throw new BadRequestException();
+    }
+
+    return newStudent;
+  }
+
+  async createTeacher(t: TeacherDto) {
+    return await this.userRepo.createNewTeacher(t);
+  }
+
+  async updateTeacher(updateTeacherDto: UpdateTeacherDto) {
+    return await this.userRepo.updateTeacher(updateTeacherDto);
+  }
+
+  async updateStudent(updateTeacherDto: UpdateStudentDto) {
+    return await this.userRepo.updateStudent(updateTeacherDto);
+  }
+
+  async deleteTeacher(teacherDto: UpdateTeacherDto) {
+    return await this.userRepo.deleteTeacher(teacherDto);
+  }
+
+  async deleteUser(userDto: UpdateUserDto) {
+    return await this.userRepo.deleteTeacher(userDto);
+  }
+
+  async updateUser(updateUserDto: UpdateUserDto) {
+    return await this.userRepo.updateUser(updateUserDto);
   }
 
   findAll() {
