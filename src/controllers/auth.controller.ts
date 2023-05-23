@@ -14,7 +14,7 @@ import {
 import { Request, Response } from 'express';
 import { UserDto } from 'src/dtos/user/create-user.dto';
 import { UserService } from 'src/services/user.service';
-import { LocalAuthGuard } from 'src/utils/localAuth.guard';
+import { LocalAuthGuard } from 'src/guards/localAuth.guard';
 
 @Controller('auth')
 export class AuthController {
