@@ -1,10 +1,7 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { Prop } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
-export type TimeTableDocument = HydratedDocument<TimeTable>;
-
-@Schema({ timestamps: true })
-export class TimeTable {
+export class TimeTable extends Document {
   @Prop({ required: true, type: String, trim: true })
   weekday: string;
 
@@ -14,5 +11,3 @@ export class TimeTable {
   @Prop({ required: true, type: String, trim: true })
   lesson_times: string;
 }
-
-export const TimeTableSchema = SchemaFactory.createForClass(TimeTable);
