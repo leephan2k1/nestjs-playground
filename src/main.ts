@@ -4,6 +4,8 @@ import { VersioningType } from '@nestjs/common';
 import * as session from 'express-session';
 import * as passport from 'passport';
 import * as connectMongoDBSession from 'connect-mongodb-session';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+
 const MongoDBStore = connectMongoDBSession(session);
 
 const sessionsStore = new MongoDBStore({
@@ -31,13 +33,23 @@ async function bootstrap() {
     }),
   );
 
-  app.use(passport.initialize());
-  app.use(passport.session());
-
+  //should be call before SwaggerModule setup
   app.enableVersioning({
     type: VersioningType.URI,
     defaultVersion: '1',
   });
+
+  const config = new DocumentBuilder()
+    .setTitle('Simple school management')
+    .setDescription('School management RESTful API')
+    .setVersion('1.0')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
+
+  app.use(passport.initialize());
+  app.use(passport.session());
 
   await app.listen(PORT, () => {
     console.log(`server is listening at PORT: ${PORT}`);
