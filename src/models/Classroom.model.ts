@@ -1,10 +1,7 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { Prop } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
-export type ClassRoomDocument = HydratedDocument<ClassRoom>;
-
-@Schema({ timestamps: true })
-export class ClassRoom {
+export class ClassRoom extends Document {
   @Prop({
     required: true,
     trim: true,
@@ -28,5 +25,3 @@ export class ClassRoom {
   })
   zone: string;
 }
-
-export const ClassRoomSchema = SchemaFactory.createForClass(ClassRoom);
