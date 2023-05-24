@@ -7,6 +7,7 @@ import { PassportModule } from '@nestjs/passport';
 import { ClassModule } from './modules/class.module';
 import { FacultyModule } from './modules/faculty.module';
 import { MajorModule } from './modules/major.module';
+import { SubjectModule } from './modules/subject.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { MajorModule } from './modules/major.module';
     ClassModule,
     FacultyModule,
     MajorModule,
+    SubjectModule,
   ],
 })
 export class AppModule {}
