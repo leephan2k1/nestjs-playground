@@ -2,14 +2,29 @@ import { Expose, Type } from 'class-transformer';
 import {
   ArrayNotEmpty,
   IsArray,
-  IsMongoId,
   IsNotEmpty,
   IsNumber,
-  IsOptional,
   IsString,
   ValidateNested,
 } from 'class-validator';
 import { BaseDto } from '../base.dto';
+
+class ClassRoom {
+  @IsNotEmpty()
+  @IsString()
+  @Expose()
+  room_id: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @Expose()
+  name: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @Expose()
+  zone: string;
+}
 
 class TimeTableDto {
   @IsNotEmpty()
@@ -26,6 +41,18 @@ class TimeTableDto {
   @IsString()
   @Expose()
   lesson_times: string;
+}
+
+class Enrollment {
+  @IsNotEmpty()
+  @Type(() => TimeTableDto)
+  @ValidateNested()
+  timeTable: TimeTableDto;
+
+  @IsNotEmpty()
+  @Type(() => ClassRoom)
+  @ValidateNested()
+  classRoom: ClassRoom;
 }
 
 export class CreateSubjectDto extends BaseDto {
@@ -49,27 +76,7 @@ export class CreateSubjectDto extends BaseDto {
   @Expose()
   @IsArray()
   @ArrayNotEmpty()
-  @Type(() => TimeTableDto)
+  @Type(() => Enrollment)
   @ValidateNested({ each: true })
-  timeTable: TimeTableDto[];
-
-  @IsMongoId({ each: true })
-  @IsOptional()
-  @Expose()
-  teachers?: string;
-
-  @IsMongoId({ each: true })
-  @IsOptional()
-  @Expose()
-  classrooms?: string;
-
-  @IsMongoId({ each: true })
-  @IsOptional()
-  @Expose()
-  students?: string;
-
-  @IsMongoId()
-  @IsOptional()
-  @Expose()
-  timetable?: string;
+  enrollments: Enrollment[];
 }
