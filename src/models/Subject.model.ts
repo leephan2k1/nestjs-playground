@@ -1,10 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import * as mongoose from 'mongoose';
 import { HydratedDocument } from 'mongoose';
-import { ClassRoom } from './Classroom.model';
-import { Student } from './Student.model';
-import { Teacher } from './Teacher.model';
-import { TimeTable } from './TimeTable.model';
+import { Enrollment } from './Enrollment.model';
 
 export type SubjectDocument = HydratedDocument<Subject>;
 
@@ -26,20 +22,14 @@ export class Subject {
   })
   name: string;
 
+  @Prop([{ type: Enrollment }])
+  enrollments: Enrollment[];
+
   @Prop({
     required: true,
     type: Number,
   })
   credits: number;
-
-  @Prop([{ type: mongoose.Types.ObjectId, ref: 'Teacher' }])
-  teachers: Teacher[];
-
-  @Prop([{ type: mongoose.Types.ObjectId, ref: 'Student' }])
-  students: Student[];
-
-  @Prop([{ type: TimeTable }])
-  timeTable!: TimeTable[];
 }
 
 export const SubjectSchema = SchemaFactory.createForClass(Subject);
