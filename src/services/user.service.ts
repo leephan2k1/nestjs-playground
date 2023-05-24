@@ -12,7 +12,10 @@ import {
   UpdateUserDto,
   UpdateStudentDto,
 } from '../dtos/user/update-user.dto';
-import { AssignTeacherDto } from 'src/dtos/class/assign-class.dto';
+import {
+  AssignStudentDto,
+  AssignTeacherDto,
+} from 'src/dtos/class/assign-class.dto';
 
 @Injectable()
 export class UserService {
@@ -42,6 +45,10 @@ export class UserService {
 
   async assignClassToTeacher(reqClass: AssignTeacherDto, class_id: string) {
     return await this.userRepo.assignClassToTeacher(reqClass, class_id);
+  }
+
+  async assignClassToStudent(reqClass: AssignStudentDto) {
+    return await this.userRepo.assignClassToStudent(reqClass);
   }
 
   async createTeacher(t: TeacherDto) {

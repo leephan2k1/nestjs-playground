@@ -12,7 +12,10 @@ import {
   UpdateUserDto,
 } from 'src/dtos/user/update-user.dto';
 import * as mongoose from 'mongoose';
-import { AssignTeacherDto } from 'src/dtos/class/assign-class.dto';
+import {
+  AssignStudentDto,
+  AssignTeacherDto,
+} from 'src/dtos/class/assign-class.dto';
 
 @Injectable()
 export class UserRepository {
@@ -47,6 +50,31 @@ export class UserRepository {
       return true;
     } catch (error) {
       return false;
+    }
+  }
+
+  async assignClassToStudent(reqClass: AssignStudentDto) {
+    try {
+      const studentModel = this.studentModel;
+
+      const docs = await Promise.all(
+        reqClass.student_ids.map(async (e) => {
+          const doc = await studentModel.findByIdAndUpdate(e, {
+            $set: {
+              class: new mongoose.Types.ObjectId(e),
+            },
+          });
+
+          return doc;
+        }),
+      );
+
+      if (!docs || docs.length === 0) throw new Error();
+
+      return docs;
+    } catch (error) {
+      console.error(error);
+      return null;
     }
   }
 

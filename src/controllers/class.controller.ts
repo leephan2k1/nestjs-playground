@@ -19,7 +19,10 @@ import { UpdateClassDto } from '../dtos/class/update-class.dto';
 import { Roles } from 'src/utils/roles.decorator';
 import { Role } from 'src/models/User.model';
 import { RolesGuard } from 'src/guards/roles.guard';
-import { AssignTeacherDto } from 'src/dtos/class/assign-class.dto';
+import {
+  AssignStudentDto,
+  AssignTeacherDto,
+} from 'src/dtos/class/assign-class.dto';
 import { Response } from 'express';
 import { UserService } from 'src/services/user.service';
 
@@ -60,6 +63,24 @@ export class ClassController {
     }
 
     throw new BadRequestException('class_id or teacher not found');
+  }
+
+  @Post('assign-student')
+  @Roles(Role.ADMIN)
+  @UseGuards(RolesGuard)
+  @UsePipes(ValidationPipe)
+  async assignStudentToClass(
+    @Body() assignStudentDto: AssignStudentDto,
+    @Res() res: Response,
+  ) {
+    const [updatedStudent, updatedUser] = await Promise.all([
+      await this.classService.assignStudent(assignStudentDto),
+      await this.userService.assignClassToStudent(assignStudentDto),
+    ]);
+
+    if (!updatedStudent || !updatedUser) throw new BadRequestException();
+
+    return res.status(HttpStatus.OK).send('success');
   }
 
   @Get()

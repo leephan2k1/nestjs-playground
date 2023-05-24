@@ -9,3 +9,13 @@ export class AssignTeacherDto {
   @IsMongoId()
   teacher: string;
 }
+
+export class AssignStudentDto {
+  @IsNotEmpty()
+  @IsMongoId()
+  class_id: string;
+
+  @IsNotEmpty()
+  @IsMongoId({ each: true })
+  student_ids: string[];
+}
