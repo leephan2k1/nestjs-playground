@@ -73,7 +73,7 @@ export class UserController {
           role_ref: String(student._id),
         }),
         await this.userService.updateStudent({
-          student_id: String(student._id),
+          student_id: String(student.student_id),
           info: String(user._id),
         }),
       ]);

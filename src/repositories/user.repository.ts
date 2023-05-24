@@ -69,7 +69,7 @@ export class UserRepository {
         {
           teacher_id: reqTeacher.teacher_id,
         },
-        { $set: { ...reqTeacher } },
+        { $set: { info: new mongoose.Types.ObjectId(reqTeacher.info) } },
       );
 
       return document;
@@ -86,7 +86,6 @@ export class UserRepository {
         },
         {
           $set: {
-            ...reqStudent,
             info: new mongoose.Types.ObjectId(reqStudent.info),
           },
         },
