@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateClassDto } from '../dtos/class/create-class.dto';
 import { UpdateClassDto } from '../dtos/class/update-class.dto';
 import { ClassRepository } from 'src/repositories/class.repository';
+import { AssignTeacherDto } from 'src/dtos/class/assign-class.dto';
 
 @Injectable()
 export class ClassService {
@@ -11,6 +12,10 @@ export class ClassService {
     const pureClassDto = CreateClassDto.plainToClass(createClassDto);
 
     return await this.classRepo.createClass(pureClassDto);
+  }
+
+  async assignTeacher(assignTeacherDto: AssignTeacherDto) {
+    return await this.classRepo.assignTeacher(assignTeacherDto);
   }
 
   findAll() {

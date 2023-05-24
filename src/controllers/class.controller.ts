@@ -9,6 +9,9 @@ import {
   UseGuards,
   UsePipes,
   ValidationPipe,
+  Res,
+  HttpStatus,
+  BadRequestException,
 } from '@nestjs/common';
 import { ClassService } from '../services/class.service';
 import { CreateClassDto } from '../dtos/class/create-class.dto';
@@ -16,10 +19,16 @@ import { UpdateClassDto } from '../dtos/class/update-class.dto';
 import { Roles } from 'src/utils/roles.decorator';
 import { Role } from 'src/models/User.model';
 import { RolesGuard } from 'src/guards/roles.guard';
+import { AssignTeacherDto } from 'src/dtos/class/assign-class.dto';
+import { Response } from 'express';
+import { UserService } from 'src/services/user.service';
 
 @Controller('class')
 export class ClassController {
-  constructor(private readonly classService: ClassService) {}
+  constructor(
+    private readonly classService: ClassService,
+    private readonly userService: UserService,
+  ) {}
 
   @Post()
   @Roles(Role.ADMIN)
@@ -27,6 +36,30 @@ export class ClassController {
   @UsePipes(ValidationPipe)
   create(@Body() createClassDto: CreateClassDto) {
     return this.classService.create(createClassDto);
+  }
+
+  @Post('assign-teacher')
+  @Roles(Role.ADMIN)
+  @UseGuards(RolesGuard)
+  @UsePipes(ValidationPipe)
+  async assignTeacherToClass(
+    @Body() assignTeacherDto: AssignTeacherDto,
+    @Res() res: Response,
+  ) {
+    const updatedClass = await this.classService.assignTeacher(
+      assignTeacherDto,
+    );
+
+    if (updatedClass) {
+      const updateTeacherStatus = await this.userService.assignClassToTeacher(
+        assignTeacherDto,
+        String(updatedClass._id),
+      );
+
+      if (updateTeacherStatus) return res.status(HttpStatus.OK).send('success');
+    }
+
+    throw new BadRequestException('class_id or teacher not found');
   }
 
   @Get()

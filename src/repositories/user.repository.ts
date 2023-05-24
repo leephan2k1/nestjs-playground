@@ -12,6 +12,7 @@ import {
   UpdateUserDto,
 } from 'src/dtos/user/update-user.dto';
 import * as mongoose from 'mongoose';
+import { AssignTeacherDto } from 'src/dtos/class/assign-class.dto';
 
 @Injectable()
 export class UserRepository {
@@ -30,6 +31,22 @@ export class UserRepository {
       return document;
     } catch (error) {
       return null;
+    }
+  }
+
+  async assignClassToTeacher(reqClass: AssignTeacherDto, class_id: string) {
+    try {
+      const doc = await this.teacherModel.findByIdAndUpdate(reqClass.teacher, {
+        $addToSet: {
+          classes: [new mongoose.Types.ObjectId(class_id)],
+        },
+      });
+
+      if (!doc) throw new Error();
+
+      return true;
+    } catch (error) {
+      return false;
     }
   }
 

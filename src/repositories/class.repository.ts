@@ -1,8 +1,9 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Class } from 'src/models/Class.model';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { CreateClassDto } from 'src/dtos/class/create-class.dto';
+import { AssignTeacherDto } from 'src/dtos/class/assign-class.dto';
 
 @Injectable()
 export class ClassRepository {
@@ -21,6 +22,26 @@ export class ClassRepository {
       throw new BadRequestException(
         `Duplicated field: ${JSON.stringify(error?.keyValue)}`,
       );
+    }
+  }
+
+  async assignTeacher(reqTeacher: AssignTeacherDto) {
+    try {
+      const doc = await this.classModel.findOneAndUpdate(
+        {
+          class_id: reqTeacher.class_id,
+        },
+        {
+          $set: {
+            teacher: new mongoose.Types.ObjectId(reqTeacher.teacher),
+          },
+        },
+      );
+      if (!doc) throw new Error();
+
+      return doc;
+    } catch (error) {
+      return null;
     }
   }
 }
