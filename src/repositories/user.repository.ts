@@ -41,7 +41,7 @@ export class UserRepository {
     try {
       const doc = await this.teacherModel.findByIdAndUpdate(reqClass.teacher, {
         $addToSet: {
-          classes: [new mongoose.Types.ObjectId(class_id)],
+          classes: new mongoose.Types.ObjectId(class_id),
         },
       });
 
