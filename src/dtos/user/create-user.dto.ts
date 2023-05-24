@@ -21,9 +21,9 @@ export class UserDto {
 
   @IsEnum(Role)
   @IsOptional()
-  role?: string;
+  role?: Role;
 
-  @IsEnum(Role)
+  @IsString()
   @IsOptional()
   role_ref?: string;
 }
